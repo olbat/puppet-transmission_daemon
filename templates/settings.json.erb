@@ -46,7 +46,7 @@
     "rpc-bind-address": "0.0.0.0", 
     "rpc-enabled": <%= (!@rpc_url.nil? and !@rpc_url.empty?).to_s %>, 
     "rpc-port": <%= @rpc_port %>, 
-    "rpc-url": "<%= @rpc_url %>", 
+    "rpc-url": "<%= @rpc_url %>/", 
     "rpc-username": "<%= @rpc_user %>", 
     "rpc-password": "<%= @rpc_password %>", 
     "rpc-whitelist": "<%= @rpc_whitelist.join(',') %>", 

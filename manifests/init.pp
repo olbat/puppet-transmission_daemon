@@ -6,7 +6,7 @@
 #
 # $download_dir:: The directory where the files have to be downloaded. Defaults to +/var/lib/transmission-daemon/downloads+.
 # $incomplete_dir:: The temporary directory used to store incomplete files. The feature is disabled when the option is not set. By default this feature is disabled.
-# $rpc_url:: The access path to the RPC server (web). The feature is disabled when the option is not set. By default this feature is disabled.
+# $rpc_url:: The access path to the RPC server (web). The feature is disabled when the option is not set. This path should not finish with the / (slash) char. By default this feature is disabled.
 # $rpc_port:: The port the RPC server is listening on. Defaults to +9091+.
 # $rpc_user:: The RPC user (ACL). Defaults to +transmission+.
 # $rpc_password:: The password of the RPC user (ACL). By default this option is not set.
@@ -91,7 +91,7 @@ class transmission_daemon (
       $opt_auth = ""
     }
     cron { 'update-blocklist':
-      command => "/usr/bin/transmission-remote http://127.0.0.1:${rpc_port}/${rpc_url}${opt_auth}",
+      command => "/usr/bin/transmission-remote http://127.0.0.1:${rpc_port}${rpc_url}${opt_auth} --blocklist-update",
       user => root,
       hour => 2,
       minute => 0,
