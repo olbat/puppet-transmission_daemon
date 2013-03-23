@@ -91,7 +91,7 @@ class transmission_daemon (
       $opt_auth = ""
     }
     cron { 'update-blocklist':
-      command => "/usr/bin/transmission-remote http://127.0.0.1:${rpc_port}${rpc_url}${opt_auth} --blocklist-update",
+      command => "/usr/bin/transmission-remote http://127.0.0.1:${rpc_port}${rpc_url}${opt_auth} --blocklist-update 2>&1 > /tmp/blocklist-update.log",
       user => root,
       hour => 2,
       minute => 0,
