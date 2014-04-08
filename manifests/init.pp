@@ -53,6 +53,8 @@ class transmission_daemon (
 
   exec { "stop-daemon":
     command => "/usr/sbin/service $daemon_name stop", #or change to 
+    refreshonly  => true,
+    subscribe => File['settings.json'], 
   }
 
   file { "${download_dir}":
