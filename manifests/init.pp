@@ -78,7 +78,7 @@ class transmission_daemon (
   file { 'settings.json':
     path => "${config_path}/settings.json",
     ensure => file,
-    require => [Package['transmission-daemon'],Exec['stop-daemon']],
+    require => Package['transmission-daemon'],
     content => template("${module_name}/settings.json.erb"),
   }
 
