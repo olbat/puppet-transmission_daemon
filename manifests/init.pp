@@ -81,7 +81,7 @@ class transmission_daemon (
   }
 
   service { 'transmission-daemon':
-    name => 'transmission-daemon',
+    name => $daemon_name,
     ensure => running,
     enable => true,
     hasrestart => true,
