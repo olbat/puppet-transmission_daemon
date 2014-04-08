@@ -38,14 +38,21 @@ class transmission_daemon (
   $rpc_whitelist = undef,
   $blocklist_url = undef
 ) {
-  $config_path = "/etc/transmission-daemon"
+
+  if ($osfamily == "FreeBSD") {
+    $config_path = "/usr/local/etc/transmission"
+    $daemon_name = "transmission"
+  } else {
+    $config_path = "/etc/transmission-daemon"
+    $daemon_name = "transmission-daemon"
+  }
 
   package { 'transmission-daemon':
     ensure => installed,
   }
 
   exec { "stop-daemon":
-    command => "/usr/sbin/service transmission-daemon stop", #or change to 
+    command => "/usr/sbin/service $daemon_name stop", #or change to 
   }
 
   file { "${download_dir}":
