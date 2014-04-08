@@ -36,12 +36,17 @@ class transmission_daemon (
   $rpc_user = "transmission",
   $rpc_password = undef,
   $rpc_whitelist = undef,
-  $blocklist_url = undef
+  $blocklist_url = undef,
+  $rc_conf = False,
 ) {
 
   if ($osfamily == "FreeBSD") {
     $config_path = "/usr/local/etc/transmission"
     $daemon_name = "transmission"
+    if ( $rc_conf == True ){
+      puppet-rc.conf::param{"transmission_enable": value => "YES",}
+      puppet-rc.conf::param{"transmission_download_dir": value => "${download_dir}", }
+    }
   } else {
     $config_path = "/etc/transmission-daemon"
     $daemon_name = "transmission-daemon"
