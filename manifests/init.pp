@@ -46,6 +46,7 @@ class transmission_daemon (
     if ( $rc_conf == True ){
       puppet-rc_conf::param{"transmission_enable": value => "YES", }
       puppet-rc_conf::param{"transmission_download_dir": value => "${download_dir}", }
+      puppet-rc_conf::param{"transmission_conf_dir": value => "${config_path}", }
     }
   } else {
     $config_path = "/etc/transmission-daemon"

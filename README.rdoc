@@ -15,7 +15,8 @@ $blocklist_url:: An url to a block list. By default this option is not set.
 
 == Requires: 
 
-Nothing.
+puppet-rc_conf by fessoga5
+https://github.com/fessoga5/puppet-rc_conf.git 
 
 == Sample Usage:
 
