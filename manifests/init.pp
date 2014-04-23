@@ -36,30 +36,16 @@ class transmission_daemon (
   $rpc_user = "transmission",
   $rpc_password = undef,
   $rpc_whitelist = undef,
-  $blocklist_url = undef,
-  $rc_conf = False,
+  $blocklist_url = undef
 ) {
-
-  if ($osfamily == "FreeBSD") {
-    $config_path = "/usr/local/etc/transmission"
-    $daemon_name = "transmission"
-    if ( $rc_conf == True ){
-      puppet-rc_conf::param{"transmission_enable": value => "YES", }
-      puppet-rc_conf::param{"transmission_download_dir": value => "${download_dir}", }
-    }
-  } else {
-    $config_path = "/etc/transmission-daemon"
-    $daemon_name = "transmission-daemon"
-  }
+  $config_path = "/etc/transmission-daemon"
 
   package { 'transmission-daemon':
     ensure => installed,
   }
 
   exec { "stop-daemon":
-    command => "/usr/sbin/service $daemon_name stop", #or change to 
-    refreshonly  => true,
-    subscribe => File['settings.json'], 
+    command => "/usr/sbin/service transmission-daemon stop", #or change to 
   }
 
   file { "${download_dir}":
@@ -83,12 +69,12 @@ class transmission_daemon (
   file { 'settings.json':
     path => "${config_path}/settings.json",
     ensure => file,
-    require => Package['transmission-daemon'],
+    require => [Package['transmission-daemon'],Exec['stop-daemon']],
     content => template("${module_name}/settings.json.erb"),
   }
 
   service { 'transmission-daemon':
-    name => $daemon_name,
+    name => 'transmission-daemon',
     ensure => running,
     enable => true,
     hasrestart => true,
