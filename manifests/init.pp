@@ -51,6 +51,7 @@ class transmission_daemon (
   file { "${download_dir}":
     ensure => directory,
     recurse => true,
+    require => Package['transmission-daemon'],
 #    owner => "debian-transmission",
 #    group => "debian-transmission",
 #    mode => "ug+rw,u+x"
@@ -60,6 +61,7 @@ class transmission_daemon (
     file { "${incomplete_dir}":
       ensure => directory,
       recurse => true,
+      require => Package['transmission-daemon'],
 #      owner => "debian-transmission",
 #      group => "debian-transmission",
 #      mode => "ug+rw,u+x"
