@@ -12,6 +12,7 @@
 # $rpc_password:: The password of the RPC user (ACL). By default this option is not set.
 # $rpc_whitelist:: An array of IP addresses. This list define which machines are allowed to use the RPC interface. It is possible to use wildcards in the addresses. By default the list is empty.
 # $blocklist_url:: An url to a block list. By default this option is not set.
+# $script_torrent_done:: Launch a script at torrent completion (see https://trac.transmissionbt.com/wiki/Scripts). By default this option is not set.
 #
 # == Requires: 
 # 
@@ -26,6 +27,7 @@
 #    rpc_port => 9091,
 #    rpc_whitelist => ['127.0.0.1'],
 #    blocklist_url => 'http://list.iblocklist.com/?list=bt_level1',
+#    script_torrent_done => 'puppet:///modules/transmission_daemon/torrent-done.sh',
 #  }
 #
 class transmission_daemon (
@@ -36,9 +38,11 @@ class transmission_daemon (
   $rpc_user = "transmission",
   $rpc_password = undef,
   $rpc_whitelist = undef,
-  $blocklist_url = undef
+  $blocklist_url = undef,
+  $script_torrent_done = undef
 ) {
   $config_path = "/etc/transmission-daemon"
+  $script_done = "${config_path}/torrent-done.sh"
 
   package { 'transmission-daemon':
     ensure => installed,
@@ -98,6 +102,18 @@ class transmission_daemon (
       hour => 2,
       minute => 0,
       require => Package['transmission-daemon'],
+    }
+  }
+
+  if $script_torrent_done {
+    file { 'torrent-done.sh':
+      path => $script_done,
+      ensure => file,
+      mode => "+x",
+      source => $script_torrent_done,
+      before => File['settings.json'],
+      require => Package['transmission-daemon'],
+      notify => Service['transmission-daemon'],
     }
   }
 }
