@@ -13,6 +13,8 @@
 # $rpc_whitelist:: An array of IP addresses. This list define which machines are allowed to use the RPC interface. It is possible to use wildcards in the addresses. By default the list is empty.
 # $blocklist_url:: An url to a block list. By default this option is not set.
 # $script_torrent_done:: Launch a script at torrent completion (see https://trac.transmissionbt.com/wiki/Scripts). By default this option is not set.
+# $encryption: 0 = Prefer unencrypted connections, 1 = Prefer encrypted connections, 2 = Require encrypted connections; default = 1
+# $lpd_enabled: Local Peer Discovery (LPD).
 #
 # == Requires: 
 # 
@@ -28,6 +30,8 @@
 #    rpc_whitelist => ['127.0.0.1'],
 #    blocklist_url => 'http://list.iblocklist.com/?list=bt_level1',
 #    script_torrent_done => 'puppet:///modules/transmission_daemon/torrent-done.sh',
+#    ratio_limit => 2,
+#    ratio_limit_enabled => "true",
 #  }
 #
 class transmission_daemon (
@@ -39,8 +43,22 @@ class transmission_daemon (
   $rpc_password = undef,
   $rpc_whitelist = undef,
   $blocklist_url = undef,
-  $script_torrent_done = undef
+  $script_torrent_done = undef,
+  $speed_limit_down = 800,
+  $speed_limit_up= 60,
+  $encryption = 1,
+  $lpd_enabled = "false",
+  $ratio_limit = 8,
+  $ratio_limit_enabled = "false",
 ) {
+
+  validate_re($lpd_enabled, '^(true|false)$')
+  validate_re($ratio_limit_enabled, '^(true|false)$')
+  validate_integer($encryption,2,0)
+  validate_integer($ratio_limit)
+  validate_integer($speed_limit_up)
+  validate_integer($speed_limit_down)
+
   $config_path = "/etc/transmission-daemon"
   $script_done = "${config_path}/torrent-done.sh"
 
